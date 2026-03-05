@@ -22,9 +22,9 @@ export function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/v1/projects_serialzer')
+        // const response = await fetch('http://127.0.0.1:8000/api/v1/projects_serialzer')
         // const response = await fetch('https://portfolio-production-6791.up.railway.app/api/v1/projects_manual');
-        // const response = await fetch('http://127.0.0.1:8000/api/v1/projects_manual');
+        const response = await fetch('http://127.0.0.1:8000/api/v1/projects_manual');
 
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
