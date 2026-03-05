@@ -21,18 +21,34 @@ export function Projects() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      try {
-        // const response = await fetch('http://127.0.0.1:8000/api/v1/projects_serialzer')
-        const response = await fetch('https://portfolio-production-6791.up.railway.app/api/v1/projects_manual');
-        // const response = await fetch('http://127.0.0.1:8000/api/v1/projects_manual');
+      const urls = [
+        "http://[IP_ADDRESS]/api/v1/projects_serializer",
+        "https://portfolio-production-6791.up.railway.app/api/v1/projects_serializer"
+      ];
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
+      try {
+        let response = null;
+
+        for (const url of urls) {
+          try {
+            response = await fetch(url);
+            if (response.ok) {
+              console.log("Fetched from:", url);
+              break;
+            }
+          } catch (err) {
+            console.log("Failed:", url);
+          }
+        }
+
+        if (!response || !response.ok) {
+          throw new Error("All API endpoints failed");
         }
 
         const data = await response.json();
-        console.log("API RESPONSE 1:", data);
+        console.log("API RESPONSE:", data);
         setProjects(data);
+
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
@@ -43,51 +59,6 @@ export function Projects() {
     fetchProjects();
   }, []);
 
-  // const fetchProjects = async () => {
-  //   try {
-  //     // Simulating API call - replace with actual Django endpoint
-  //     // const response = await fetch('YOUR_DJANGO_API_URL/api/projects/');
-  //     // const data = await response.json();
-
-  //     // Mock data for demonstration
-  //     await new Promise(resolve => setTimeout(resolve, 1000));
-
-  //     const mockProjects: Project[] = [
-  //       {
-  //         id: 1,
-  //         title: 'E-Commerce Platform',
-  //         description: 'A full-stack e-commerce application with user authentication, product management, and payment integration.',
-  //         technologies: ['React', 'Django', 'PostgreSQL', 'Stripe'],
-  //         github_url: 'https://github.com/username/project',
-  //         live_url: 'https://project-demo.com',
-  //         created_at: '2024-01-15',
-  //       },
-  //       {
-  //         id: 2,
-  //         title: 'Task Management System',
-  //         description: 'Collaborative task management tool with real-time updates and team collaboration features.',
-  //         technologies: ['React', 'Django REST', 'WebSockets', 'Redis'],
-  //         github_url: 'https://github.com/username/project',
-  //         created_at: '2024-02-20',
-  //       },
-  //       {
-  //         id: 3,
-  //         title: 'Weather Dashboard',
-  //         description: 'Interactive weather dashboard displaying real-time weather data and forecasts for multiple locations.',
-  //         technologies: ['React', 'OpenWeather API', 'Chart.js'],
-  //         github_url: 'https://github.com/username/project',
-  //         live_url: 'https://weather-demo.com',
-  //         created_at: '2024-03-10',
-  //       },
-  //     ];
-
-  //     setProjects(mockProjects);
-  //   } catch (error) {
-  //     console.error('Error fetching projects:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   if (loading) {
     return (
