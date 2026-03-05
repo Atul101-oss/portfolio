@@ -22,7 +22,7 @@ export function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       const urls = [
-        "http://[IP_ADDRESS]/api/v1/projects_serializer",
+        "http://127.0.0.1:8000/api/v1/projects_serializer",
         "https://portfolio-production-6791.up.railway.app/api/v1/projects_serializer"
       ];
 
