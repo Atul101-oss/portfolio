@@ -135,6 +135,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://*", "https://*"]
+CSRF_TRUSTED_ORIGINS = ["https://portfolio-production-6791.up.railway.app", "http://localhost:5173", "http://*", "https://*"]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
