@@ -1,4 +1,6 @@
 from django.shortcuts import redirect, render
+from django.http import HttpResponse
+from django.template.response import TemplateResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import FileResponse
@@ -20,12 +22,17 @@ def send_name(request):
     })
 
 def react_home(request):
-    path = os.path.join(settings.BASE_DIR, "static/reactHome/index.html")
-    return FileResponse(open(path, "rb"))
+      return TemplateResponse(request, "reactHome/index.html")
     
 def medical_diagnose(request):
-    path = os.path.join(settings.BASE_DIR, "static/Medical-diagnose/index.html")
-    return FileResponse(open(path, "rb"))
+    return TemplateResponse(request, "Medical-diagnose/index.html")
+
+def notesync(request):
+    return TemplateResponse(request, "notesync/index.html")
+
+def react_testing(request):
+    return TemplateResponse(request, "react-testing/index.html")
+
 def login(request):
 	pass
 

@@ -1,5 +1,10 @@
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from './ui/button';
+import { useEffect } from 'react';
+
+// useEffect(() => {
+//   response = await fetch("http:")
+// })
 
 export function Hero() {
   return (

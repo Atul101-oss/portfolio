@@ -16,6 +16,7 @@ class Projects(models.Model):
     github_url = models.URLField(blank=True, null=True)
     live_url = models.URLField(blank=True, null=True)
     image_url = models.ImageField(upload_to="projects/", blank=True, null=True)
+    website = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

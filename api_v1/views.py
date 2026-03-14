@@ -44,6 +44,15 @@ def get_projects_manual(request):
         })
     return JsonResponse(data, safe=False)
 
+@api_view(["GET"])
+def get_project(request, project_id):
+    try:
+        project = models.Projects.objects.get(website=project_id)
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data)
+    except models.Projects.DoesNotExist:
+        return Response({"error": "Project not found"}, status=404)
+
 def test_api(request):
     manual = get_projects_manual(request)
     print(manual.content.decode())
