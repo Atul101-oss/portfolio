@@ -2,8 +2,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./app/App.tsx";
 import NoteSync from "./app/notesync.tsx";
-import Portfolio from "./app/portfolio.tsx";
-import Portfolio1 from "./app/portfolio1.tsx";
 
 import { Calendar } from "./app/components/ui/calendar.tsx";
 import "./styles/index.css";
@@ -24,10 +22,6 @@ function Root() {
       return <App />;
     case "notesync":
       return <NoteSync />;
-    case "portfolio":
-      return <Portfolio />;
-    case "portfolio1":
-      return <Portfolio1 />;
     case "calendar":
       return <Calendar />;
     case "medical-diagnose":

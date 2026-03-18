@@ -30,6 +30,9 @@ def medical_diagnose(request):
 def notesync(request):
     return TemplateResponse(request, "notesync/index.html")
 
+def voicetype(request):
+    return TemplateResponse(request, "voicetype/index.html")
+
 def react_testing(request):
     return TemplateResponse(request, "react-testing/index.html")
 

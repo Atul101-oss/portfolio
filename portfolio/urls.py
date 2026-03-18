@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.react_home, name='react_home'),
     path('medical-diagnose/', views.medical_diagnose, name='medical_diagnose'),
     path('notesync/', views.notesync, name='notesync'),
+    path('voicetype/', views.voicetype, name='voicetype'),
     path('react-testing/', views.react_testing, name='react-testing'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
