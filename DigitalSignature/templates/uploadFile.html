@@ -1,0 +1,180 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<h2>Hash Generator (Supports ALL file types)</h2>
+
+<style>
+    .horizontal {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .cards {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        width: 45%;
+    }
+    .uploadFileCard {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class=horizontal>
+        <div class=cards>
+            <label for="text_input">Enter a Message:</label><br>
+            <textarea name="input_text" id="input_text" placeholder="Enter Your Message..."></textarea></div>
+        <div class=cards>
+            <div class="uploadFileCard">
+                <label for="File">Upload File</label>
+                <input type="file" name="file" id="File" onchange="previewFile()">
+
+                <!-- Preview Area -->
+                <div id="file_preview" style="margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class=horizontal>
+        <div class=cards style="width: 100%;">
+            <label for="hash_value"><b>Hash Values:</b></label><br>
+            <div id="hash_list" style="display: flex; gap: 10px;">
+                    <!-- The hash value will be displayed here after generation. -->
+            </div>
+            <button type="button" onclick="document.getElementById('hash_list').style.display = 'none';">Clear Hash</button>    
+        </div>
+        <div class=cards>
+            <button type="button" onclick="getHash()">Generate Hash</button>
+        </div>
+    </div>
+</form>
+
+<div class=horizontal>
+    <div class=cards style="width: 100%;">
+        <label for="hash_value"><b>Key Pair</b></label><br>
+        <div id="key-pair-container" style="display: flex; gap: 10px;">
+            <textarea id="privateKey" style="width:100%; height:150px;" readonly></textarea>
+            <br><br>
+            <textarea id="publicKey" style="width:100%; height:150px;" readonly></textarea>
+        <button type="button" onclick="genKeyPair()">Generate Asymmetric Key Pair</button>
+    </div>
+    <p class= warning style="color: red" > these key pair has bind with you username, and can be seen in dashhboard panel</p>
+</div>
+
+<!-- Sign Digitally -->
+<!-- <div class=horizontal>
+    <div class=cards style="width: 100%;">
+        <label for="hash_value"><b>Key Pair</b></label><br>
+        <div id="key-pair-container" style="display: flex; gap: 10px;">
+            <textarea id="privateKey" style="width:100%; height:150px;" readonly></textarea>
+            <br><br>
+            <textarea id="publicKey" style="width:100%; height:150px;" readonly></textarea>
+        <button type="button" onclick="genKeyPair()">Generate Asymmetric Key Pair</button>
+    </div>
+    <p class= warning style="color: red" > these key pair has bind with you username, and can be seen in dashhboard panel</p>
+</div> -->
+
+<script>
+
+    function genKeyPair() {
+        fetch ("{% url 'keyGenerator' %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': "sdfdfdsfdsfdfsd" // Replace with actual CSRF token if needed
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("privateKey").value = data.private_key;
+            document.getElementById("publicKey").value = data.public_key;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+    // Optional: Add JavaScript to handle file input changes or other interactions
+    function getHash() {
+        const form = document.querySelector("form");
+        const formData = new FormData(form);
+        
+        fetch("{% url 'getHash' %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': "sdfdfdsfdsfdfsd" // Replace with actual CSRF token if needed
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            let value = "";
+            let fileName= "Hash Value";
+            if (data.hash_value.error) {
+                value = data.hash_value.error;
+            } else {
+                fileName = data.hash_value.string || data.hash_value.filename || "Hash Value";
+                value = data.hash_value.text || data.hash_value.file;
+            }
+
+            // ✅ Create element properly
+            const hashResult = document.createElement("p");
+            hashResult.textContent = fileName + ": " + value;
+
+            document.getElementById("hash_list").appendChild(hashResult);
+            document.getElementById("input_text").value = "";
+            document.getElementById("File").value = "";
+            // document.getElementById("file_preview").innerHTML = "";
+            document.getElementById("hash_list").style.display = "block";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+
+    function previewFile() {
+        const fileInput = document.getElementById("File");
+        const preview = document.getElementById("file_preview");
+
+        preview.innerHTML = ""; // clear previous preview
+
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const fileType = file.type;
+
+        // 📷 Image Preview
+        if (fileType.startsWith("image/")) {
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(file);
+            img.style.maxWidth = "300px";
+            img.style.display = "block";
+            preview.appendChild(img);
+        }
+
+        // 📄 PDF Preview
+        else if (fileType === "application/pdf") {
+            const iframe = document.createElement("iframe");
+            iframe.src = URL.createObjectURL(file);
+            iframe.width = "300";
+            iframe.height = "400";
+            preview.appendChild(iframe);
+        }
+
+        // 📁 Other Files
+        else {
+            const p = document.createElement("p");
+            p.textContent = "Selected file: " + file.name;
+            preview.appendChild(p);
+        }
+    }
+
+</script>
+
+{% endblock content %}

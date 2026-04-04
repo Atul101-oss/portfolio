@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 from . import views
+# from . import DigitalSignature
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,8 +27,11 @@ urlpatterns = [
     path('notesync/', views.notesync, name='notesync'),
     path('voicetype/', views.voicetype, name='voicetype'),
     path('react-testing/', views.react_testing, name='react-testing'),
+    path('DigitalSignature/', include('DigitalSignature.urls'), name='digital_signature'),
+    path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
+    path('register/', views.register, name='register'),
     path("api/get/", views.get_message),
     path("api/post/", views.send_name),
     path("api/v1/", include("api_v1.urls")),

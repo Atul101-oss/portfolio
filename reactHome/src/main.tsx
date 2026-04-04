@@ -1,7 +1,6 @@
 
 import { createRoot } from "react-dom/client";
 import App from "./app/App.tsx";
-import NoteSync from "./app/notesync.tsx";
 
 import { Calendar } from "./app/components/ui/calendar.tsx";
 import "./styles/index.css";
@@ -20,8 +19,6 @@ function Root() {
   switch (website) {
     case "app":
       return <App />;
-    case "notesync":
-      return <NoteSync />;
     case "calendar":
       return <Calendar />;
     case "medical-diagnose":

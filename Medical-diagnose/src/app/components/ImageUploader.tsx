@@ -15,12 +15,18 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onAnalyze, isAnaly
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
+  // Callback ref: attaches stream to video element as soon as it mounts
+  const setVideoRef = (node: HTMLVideoElement | null) => {
+    videoRef.current = node;
+    if (node && stream) {
+      node.srcObject = stream;
+    }
+  };
+
+  // Also handle the case where stream changes after video is already mounted
   useEffect(() => {
     if (stream && videoRef.current) {
       videoRef.current.srcObject = stream;
-      videoRef.current.play().catch(err => {
-        console.error("Error playing video:", err);
-      });
     }
   }, [stream]);
 
@@ -110,10 +116,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onAnalyze, isAnaly
                 className="relative rounded-2xl overflow-hidden aspect-video bg-black"
               >
                 <video
-                  ref={videoRef}
+                  ref={setVideoRef}
                   autoPlay
                   playsInline
                   muted
+                  onLoadedMetadata={(e) => {
+                    (e.target as HTMLVideoElement).play().catch(err => {
+                      console.error("Error playing video:", err);
+                    });
+                  }}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4">
