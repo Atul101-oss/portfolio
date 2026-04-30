@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav style="background-color:#333; padding:10px;">
+        <ul style="list-style:none; display:flex; gap:20px; margin:0; padding:0;">
+            {% if user.is_authenticated %}
+                <li><a href="/dashboard/" style="color:white;">Dashboard</a></li>
+                <li><a href="/logout/" style="color:white;">Logout</a></li>
+            {% else %}
+                <li><a href="/login/" style="color:white;">Login</a></li>
+                <li><a href="/register/" style="color:white;">Register</a></li>
+            {% endif %}
+            <li><a href="#" style="color:white;">{{ user.username }}</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding:20px;">
+        {% block content %}
+        <!-- Page specific content will go here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background:#f1f1f1; padding:10px; text-align:center;">
+        {% block footer %}
+        <p>© 2026 My Website</p>
+        {% endblock %}
+    </footer>
+
+    <!-- JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
