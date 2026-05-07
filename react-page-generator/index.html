@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Page Generator</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .sites {
+            display: grid;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        .site-card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #334155;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .site-card:hover {
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+            background: #233147;
+        }
+        .site-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .badge {
+            background: #38bdf820;
+            color: #38bdf8;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>React Page Generator</h1>
+    <div class="sites">
+        <a href="/sites/notesync/index.html" class="site-card">
+            <span class="site-name">NoteSync</span>
+            <span class="badge">Migrated</span>
+        </a>
+        <a href="/sites/portfolio/index.html" class="site-card">
+            <span class="site-name">Portfolio</span>
+            <span class="badge">Migrated</span>
+        </a>
+        <a href="/sites/medical-diagnose/index.html" class="site-card">
+            <span class="site-name">Medical Diagnose</span>
+            <span class="badge">Migrated</span>
+        </a>
+        <a href="/sites/voicetype/index.html" class="site-card">
+            <span class="site-name">VoiceType</span>
+            <span class="badge">Migrated</span>
+        </a>
+        <a href="/sites/telegram-bots/index.html" class="site-card">
+            <span class="site-name">Bot Monitor</span>
+            <span class="badge">New App</span>
+        </a>
+    </div>
+</body>
+</html>

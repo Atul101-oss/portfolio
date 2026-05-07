@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api_v1',
     'DigitalSignature',
     'dashboard',
+    'telegramBots'
 ]
 
 MIDDLEWARE = [

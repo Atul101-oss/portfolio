@@ -35,6 +35,7 @@ urlpatterns = [
     path("api/get/", views.get_message),
     path("api/post/", views.send_name),
     path("api/v1/", include("api_v1.urls")),
+    path('telegramBots/', include("telegramBots.urls"), name='telegramBots'),
     # path(
     #     "/",
     #     # RedirectView.as_view(url="/static/reactHome/index.html")

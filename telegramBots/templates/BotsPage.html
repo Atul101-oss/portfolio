@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Telegram Bots Dashboard — look up users and interact with bots." />
+  <title>Telegram Bots</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 40%, #24243e 100%);
+      color: #e4e4f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1.5rem 1.5rem;
+    }
+
+    /* ── Page Title ──────────────────────────────────── */
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Card Grid ───────────────────────────────────── */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 100%;
+      flex: 1;
+      padding: 0 1rem;
+    }
+
+    /* ── Card ────────────────────────────────────────── */
+    .bot-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-height: 0;
+    }
+
+    .bot-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.18);
+      border-color: rgba(167, 139, 250, 0.3);
+    }
+
+    /* Card accent bar */
+    .bot-card:nth-child(1) { border-top: 3px solid #38bdf8; }
+    .bot-card:nth-child(2) { border-top: 3px solid #a78bfa; }
+    .bot-card:nth-child(3) { border-top: 3px solid #f472b6; }
+
+    /* ── Card Title ──────────────────────────────────── */
+    .bot-card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .bot-card:nth-child(1) h2 { color: #38bdf8; }
+    .bot-card:nth-child(2) h2 { color: #a78bfa; }
+    .bot-card:nth-child(3) h2 { color: #f472b6; }
+
+    /* ── Input Row (user-id + button) ────────────────── */
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-row input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      color: #e4e4f0;
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-row input::placeholder { color: rgba(228, 228, 240, 0.4); }
+
+    .input-row input:focus {
+      border-color: #a78bfa;
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+    }
+
+    /* ── "Go to Bot" Button ──────────────────────────── */
+    .btn-go {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .bot-card:nth-child(1) .btn-go { background: #38bdf8; color: #0f172a; }
+    .bot-card:nth-child(2) .btn-go { background: #a78bfa; color: #0f172a; }
+    .bot-card:nth-child(3) .btn-go { background: #f472b6; color: #0f172a; }
+
+    .btn-go:hover  { filter: brightness(1.15); transform: scale(1.03); }
+    .btn-go:active { transform: scale(0.97); }
+
+    /* Telegram icon inside button */
+    .btn-go svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* ── Fetch Button ────────────────────────────────── */
+    .btn-fetch {
+      align-self: flex-start;
+      padding: 0.55rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 0.5rem;
+      background: transparent;
+      color: #e4e4f0;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-fetch:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Response Area ───────────────────────────────── */
+    .response-area {
+      width: 100%;
+      flex: 1;
+      min-height: 80px;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      color: #cbd5e1;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    .response-area::placeholder { color: rgba(203, 213, 225, 0.35); }
+
+    /* ── Label ───────────────────────────────────────── */
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(228, 228, 240, 0.5);
+      margin-bottom: -0.5rem;
+    }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      body { height: auto; min-height: 100vh; overflow: auto; }
+      .page-title { font-size: 1.5rem; }
+      .cards-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">🤖 Telegram Bots</h1>
+
+  <div class="cards-container">
+
+    <!-- ─── Card 1 ──────────────────────────────────── -->
+    <div class="bot-card" id="card-image-resize-bot">
+      <h2>Image Resize Bot</h2>
+
+      <span class="field-label">Telegram User ID</span>
+      <div class="input-row">
+        <input
+          type="text"
+          id="userId-1"
+          placeholder="e.g. 123456789"
+          aria-label="Telegram User ID for Image Resize Bot"
+        />
+        <a
+          class="btn-go"
+          id="goToBot-1"
+          href="https://t.me/ImageResizeBot"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open bot in Telegram"
+        >
+          <!-- Telegram paper-plane icon -->
+          <svg viewBox="0 0 24 24"><path d="M21.2 4.4 2.9 11.2c-1.2.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.8-.4l2.3-2.3 4.7 3.5c.9.5 1.5.2 1.7-.8L22.8 5.6c.3-1.3-.5-1.9-1.6-1.2z"/></svg>
+          Open Bot
+        </a>
+      </div>
+
+      <span class="field-label">API Response</span>
+      <button class="btn-fetch" id="fetchBtn-1" onclick="fetchUser(1)">Fetch User Info</button>
+      <textarea
+        class="response-area"
+        id="response-1"
+        placeholder="API response will appear here…"
+        readonly
+      ></textarea>
+    </div>
+
+    <!-- ─── Card 2 ──────────────────────────────────── -->
+    <div class="bot-card" id="card-pdf-merge-bot">
+      <h2>PDF Merge Bot</h2>
+
+      <span class="field-label">Telegram User ID</span>
+      <div class="input-row">
+        <input
+          type="text"
+          id="userId-2"
+          placeholder="e.g. 123456789"
+          aria-label="Telegram User ID for PDF Merge Bot"
+        />
+        <a
+          class="btn-go"
+          id="goToBot-2"
+          href="https://t.me/PDFMergeBot"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open bot in Telegram"
+        >
+          <svg viewBox="0 0 24 24"><path d="M21.2 4.4 2.9 11.2c-1.2.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.8-.4l2.3-2.3 4.7 3.5c.9.5 1.5.2 1.7-.8L22.8 5.6c.3-1.3-.5-1.9-1.6-1.2z"/></svg>
+          Open Bot
+        </a>
+      </div>
+
+      <span class="field-label">API Response</span>
+      <button class="btn-fetch" id="fetchBtn-2" onclick="fetchUser(2)">Fetch User Info</button>
+      <textarea
+        class="response-area"
+        id="response-2"
+        placeholder="API response will appear here…"
+        readonly
+      ></textarea>
+    </div>
+
+    <!-- ─── Card 3 ──────────────────────────────────── -->
+    <div class="bot-card" id="card-img-to-pdf-bot">
+      <h2>Image to PDF Bot</h2>
+
+      <span class="field-label">Telegram User ID</span>
+      <div class="input-row">
+        <input
+          type="text"
+          id="userId-3"
+          placeholder="e.g. 123456789"
+          aria-label="Telegram User ID for Image to PDF Bot"
+        />
+        <a
+          class="btn-go"
+          id="goToBot-3"
+          href="https://t.me/ImgToPDFBot"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open bot in Telegram"
+        >
+          <svg viewBox="0 0 24 24"><path d="M21.2 4.4 2.9 11.2c-1.2.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.8-.4l2.3-2.3 4.7 3.5c.9.5 1.5.2 1.7-.8L22.8 5.6c.3-1.3-.5-1.9-1.6-1.2z"/></svg>
+          Open Bot
+        </a>
+      </div>
+
+      <span class="field-label">API Response</span>
+      <button class="btn-fetch" id="fetchBtn-3" onclick="fetchUser(3)">Fetch User Info</button>
+      <textarea
+        class="response-area"
+        id="response-3"
+        placeholder="API response will appear here…"
+        readonly
+      ></textarea>
+    </div>
+
+  </div>
+
+  <script>
+    /**
+     * Fetch user info from a placeholder API using the Telegram User ID
+     * entered in the corresponding card.
+     * Replace the URL below with your actual backend endpoint.
+     */
+    async function fetchUser(cardNumber) {
+      const userIdInput = document.getElementById(`userId-${cardNumber}`);
+      const responseArea = document.getElementById(`response-${cardNumber}`);
+      const fetchBtn = document.getElementById(`fetchBtn-${cardNumber}`);
+      const userId = userIdInput.value.trim();
+
+      if (!userId) {
+        responseArea.value = '⚠️  Please enter a Telegram User ID first.';
+        return;
+      }
+
+      fetchBtn.textContent = 'Loading…';
+      fetchBtn.disabled = true;
+      responseArea.value = '';
+
+      try {
+        // Replace this URL with your real API endpoint
+        const res = await fetch(`/api/telegram/user/${userId}/`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        const data = await res.json();
+        responseArea.value = JSON.stringify(data, null, 2);
+      } catch (err) {
+        responseArea.value = `❌  Error: ${err.message}`;
+      } finally {
+        fetchBtn.textContent = 'Fetch User Info';
+        fetchBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

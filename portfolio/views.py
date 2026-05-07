@@ -22,19 +22,19 @@ def send_name(request):
     })
 
 def react_home(request):
-      return TemplateResponse(request, "reactHome/index.html")
+      return TemplateResponse(request, "react-pages/sites/portfolio/index.html")
     
 def medical_diagnose(request):
-    return TemplateResponse(request, "Medical-diagnose/index.html")
+    return TemplateResponse(request, "react-pages/sites/medical-diagnose/index.html")
 
 def notesync(request):
-    return TemplateResponse(request, "notesync/index.html")
+    return TemplateResponse(request, "react-pages/sites/notesync/index.html")
 
 def voicetype(request):
-    return TemplateResponse(request, "voicetype/index.html")
+    return TemplateResponse(request, "react-pages/sites/voicetype/index.html")
 
 def react_testing(request):
-    return TemplateResponse(request, "react-testing/index.html")
+    return HttpResponse("GoodBye!")
 
 
 

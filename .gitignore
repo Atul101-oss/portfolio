@@ -2,3 +2,9 @@
 .venv
 .vscode/
 __pycache__/
+*.log
+telegramBots/logs/
+static/react-pages/
+node_modules/
+dist/
+.env
