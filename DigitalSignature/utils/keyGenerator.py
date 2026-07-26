@@ -5,21 +5,29 @@ import subprocess
 import os
 from DigitalSignature import models
 
-def generate_user_keys(user):
+def generate_user_keys(user=None):
     keys_dir = os.path.join(current_dir, "keys")
     os.makedirs(keys_dir, exist_ok=True)
 
-    key_path = os.path.join(keys_dir, user.username)
+    if hasattr(user, 'username'):
+        username = user.username
+    elif isinstance(user, str) and user:
+        username = user
+    else:
+        username = "default_user"
+
+    key_path = os.path.join(keys_dir, username)
     subprocess.run(["openssl", "genpkey", "-algorithm", "RSA", "-out", key_path])
     subprocess.run(["openssl", "pkey", "-pubout", "-in", key_path, "-out", key_path + ".pub"])
     
-    models.UserKey.objects.update_or_create(
-        user=user,
-        defaults={
-            'private_key': key_path,
-            'public_key': key_path + ".pub"
-        }
-    )
+    if user and hasattr(user, 'username') and hasattr(user, 'pk'):
+        models.UserKey.objects.update_or_create(
+            user=user,
+            defaults={
+                'private_key': key_path,
+                'public_key': key_path + ".pub"
+            }
+        )
     return key_path, key_path + ".pub"
 
 if __name__ == "__main__":

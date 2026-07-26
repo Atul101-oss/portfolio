@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.95rem;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .welcome-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-sub {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: #e5e7eb;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 12px 24px -10px rgba(59, 130, 246, 0.2);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .project-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .icon-portfolio { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .icon-medical { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        .icon-notesync { background: rgba(163, 230, 53, 0.2); color: #a3e635; }
+        .icon-voicetype { background: rgba(34, 211, 238, 0.2); color: #22d3ee; }
+        .icon-signature { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+        .icon-telegram { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+
+        .project-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #f3f4f6;
+        }
+
+        .project-desc {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">
+            ⚡ User Dashboard
+        </a>
+        <div class="user-nav">
+            <div class="avatar" title="{{ user.username }}">
+                {{ user.username|slice:":1"|upper }}
+            </div>
+            <span style="font-weight: 500; font-size: 0.95rem;">{{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1 class="welcome-title">Welcome back, {{ user.username }}! 👋</h1>
+            <p class="welcome-sub">You are logged into your unified workspace dashboard. Access all portfolio apps and modules below.</p>
+        </div>
+
+        <h2 class="section-title">Portfolio Projects</h2>
+
+        <div class="projects-grid">
+            <a href="/" class="project-card">
+                <div>
+                    <div class="project-icon icon-portfolio">🌐</div>
+                    <div class="project-name">Main Portfolio</div>
+                    <div class="project-desc">Personal showcase site with interactive components and projects overview.</div>
+                </div>
+            </a>
+
+            <a href="/medical-diagnose/" class="project-card">
+                <div>
+                    <div class="project-icon icon-medical">🩺</div>
+                    <div class="project-name">DermAI Scan</div>
+                    <div class="project-desc">AI-powered medical skin image analysis and diagnostic assistance.</div>
+                </div>
+            </a>
+
+            <a href="/notesync/" class="project-card">
+                <div>
+                    <div class="project-icon icon-notesync">⚡</div>
+                    <div class="project-name">NoteSync</div>
+                    <div class="project-desc">Real-time collaborative note-taking and knowledge base application.</div>
+                </div>
+            </a>
+
+            <a href="/voicetype/" class="project-card">
+                <div>
+                    <div class="project-icon icon-voicetype">🎙️</div>
+                    <div class="project-name">VoiceType</div>
+                    <div class="project-desc">Voice-to-text dictation app with instant AI transcript editing.</div>
+                </div>
+            </a>
+
+            <a href="/DigitalSignature/" class="project-card">
+                <div>
+                    <div class="project-icon icon-signature">✍️</div>
+                    <div class="project-name">Digital Signature</div>
+                    <div class="project-desc">Cryptographic key generation and PDF document signature verification.</div>
+                </div>
+            </a>
+
+            <a href="/telegramBots/" class="project-card">
+                <div>
+                    <div class="project-icon icon-telegram">🤖</div>
+                    <div class="project-name">Telegram Bots</div>
+                    <div class="project-desc">Automated bot integration services and message handlers.</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2026 Portfolio Workspace. All rights reserved.
+    </footer>
+
+</body>
+</html>

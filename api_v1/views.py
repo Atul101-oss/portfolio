@@ -53,11 +53,30 @@ def get_project(request, project_id):
     except models.Projects.DoesNotExist:
         return Response({"error": "Project not found"}, status=404)
 
+@api_view(["GET"])
 def test_api(request):
-    manual = get_projects_manual(request)
-    print(manual.content.decode())
-    serializer = get_projects_serializer(request)
-    return JsonResponse({
-        "manual": manual,
-        "serializer": serializer
+    projects = models.Projects.objects.all()
+    serializer = ProjectSerializer(projects, many=True)
+    return Response({
+        "status": "ok",
+        "message": "API v1 is active",
+        "projects_count": projects.count(),
+        "projects": serializer.data
+    })
+
+
+@api_view(["GET"])
+def dashboard_api(request):
+    user_data = {
+        "is_authenticated": request.user.is_authenticated,
+        "username": request.user.username if request.user.is_authenticated else "",
+        "email": request.user.email if request.user.is_authenticated else "",
+    }
+    
+    projects = models.Projects.objects.all()
+    project_serializer = ProjectSerializer(projects, many=True)
+    
+    return Response({
+        "user": user_data,
+        "projects": project_serializer.data
     })

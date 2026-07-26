@@ -1,9 +1,16 @@
 """
-PDF processing utilities — merge multiple PDFs using PyPDF2.
+PDF processing utilities — merge multiple PDFs using pypdf or PyPDF2.
 """
 
 import io
-from PyPDF2 import PdfMerger
+
+try:
+    from pypdf import PdfMerger
+except ImportError:
+    try:
+        from PyPDF2 import PdfMerger
+    except ImportError:
+        PdfMerger = None
 
 
 def merge_pdfs(pdf_bytes_list: list[bytes]) -> bytes:
@@ -21,6 +28,9 @@ def merge_pdfs(pdf_bytes_list: list[bytes]) -> bytes:
 
     if len(pdf_bytes_list) < 2:
         raise ValueError("Need at least 2 PDFs to merge")
+
+    if PdfMerger is None:
+        raise RuntimeError("Neither pypdf nor PyPDF2 library is installed.")
 
     merger = PdfMerger()
 

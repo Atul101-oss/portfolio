@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.template.response import TemplateResponse
+from django.contrib.auth.decorators import login_required
 
-
-# Create your views here.
+@login_required(login_url='login')
 def dashboard(request):
-    return HttpResponse(f"Welcome back {request.user} to the dashboard!")
+    return TemplateResponse(request, "react-pages/sites/dashboard/index.html", {
+        'user': request.user
+    })

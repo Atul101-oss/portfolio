@@ -95,12 +95,33 @@ async def menu_button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
     # by their respective ConversationHandlers via callback_query entry points.
 
 
+async def unknown_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle any non-command text or unhandled messages.
+    Responds immediately with accepted commands & main menu.
+    """
+    fallback_text = (
+        "🤖 <b>I received your message!</b>\n\n"
+        "Here are the accepted commands and tools available on FileBot:\n\n"
+        "• <b>/start</b> — Open Main Menu\n"
+        "• <b>/help</b> — Usage Guide\n"
+        "• <b>/pdf_to_img</b> — Convert PDF Pages to Images\n"
+        "• <b>/cancel</b> — Cancel current operation\n\n"
+        "Tap a button below to choose a tool:"
+    )
+    await update.message.reply_text(
+        fallback_text,
+        parse_mode="HTML",
+        reply_markup=main_menu_keyboard(),
+    )
+
+
 def get_start_handlers():
-    """Return the list of handlers for start/help/menu."""
+    """Return the list of handlers for start/help/menu and non-command fallbacks."""
+    from telegram.ext import MessageHandler, filters
     return [
         CommandHandler("start", start_command),
         CommandHandler("help", help_command),
-        # Only handle help and back buttons here;
-        # tool-specific buttons are handled by ConversationHandlers
         CallbackQueryHandler(menu_button_handler, pattern=f"^({MENU_HELP}|{MENU_BACK})$"),
+        MessageHandler(filters.ALL & ~filters.COMMAND, unknown_message_handler),
     ]

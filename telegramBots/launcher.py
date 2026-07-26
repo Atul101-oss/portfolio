@@ -3,7 +3,12 @@ import sys
 import logging
 import importlib.util
 from multiprocessing import Process
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    def load_dotenv(*args, **kwargs):
+        pass
+
 
 # Base logging directory
 LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
@@ -30,7 +35,9 @@ def setup_logging(bot_name):
     logger.addHandler(console_handler)
     
     # File Handler (Central for all bots)
+    os.makedirs(LOG_DIR, exist_ok=True)
     file_handler = logging.FileHandler(LOG_FILE)
+
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     

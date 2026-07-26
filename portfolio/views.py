@@ -45,17 +45,23 @@ from django.contrib.auth.forms import UserCreationForm
 from django.middleware.csrf import get_token
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    next_url = request.GET.get('next', 'dashboard')
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
-            return redirect('dashboard')
+            return redirect(next_url)
     else:
         form = UserCreationForm()
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/register.html', {'form': form, 'next': next_url})
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    next_url = request.GET.get('next', 'dashboard')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -64,12 +70,13 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return redirect('dashboard')
+                return redirect(next_url if next_url else 'dashboard')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
 def logout(request):
     auth_logout(request)
     next_url = request.GET.get('next', 'react_home')
     return redirect(next_url)
+

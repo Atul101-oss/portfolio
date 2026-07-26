@@ -1,0 +1,30 @@
+# About Me
+
+Hi, I'm Atul Arya, a B.Sc. (Hons.) Computer Science student at Aryabhatta College, University of Delhi.
+
+I'm interested in backend development, DevOps, Linux, cloud computing, and AI/ML. I enjoy building practical applications, deploying them on cloud platforms, and learning how software works from the operating system level to production deployment.
+
+## Technologies
+
+* Languages: Python, JavaScript, C++, Java
+* Backend: Django, Flask, Node.js, Express.js
+* Frontend: React
+* Databases: MongoDB, MySQL
+* DevOps & Cloud: Docker, Git, GitHub, Linux, AWS EC2, Nginx
+* AI/ML: TensorFlow, OpenCV, scikit-learn
+
+## Projects
+
+* Semantic Image Search using BLIP, Sentence Transformers, and FAISS
+* Restaurant Reservation System (MERN Stack)
+* Skin Disease Detection and Drug Recommendation System
+
+## Currently Learning
+
+* CI/CD pipelines
+* Docker and containerization
+* Kubernetes
+* Linux system administration
+* Cloud infrastructure and automation
+
+I enjoy solving technical problems, exploring new technologies, and continuously improving my software engineering skills.

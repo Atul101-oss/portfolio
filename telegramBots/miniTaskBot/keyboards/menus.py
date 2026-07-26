@@ -9,6 +9,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 MENU_RESIZE = "menu_resize"
 MENU_PDF_MERGE = "menu_pdf_merge"
 MENU_IMG_TO_PDF = "menu_img_to_pdf"
+MENU_PDF_TO_IMG = "menu_pdf_to_img"
 MENU_HELP = "menu_help"
 MENU_BACK = "menu_back"
 
@@ -27,6 +28,7 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton("🖼️  Resize Image", callback_data=MENU_RESIZE)],
         [InlineKeyboardButton("📄  Merge PDFs", callback_data=MENU_PDF_MERGE)],
         [InlineKeyboardButton("🖼️ ➡ 📄  Image to PDF", callback_data=MENU_IMG_TO_PDF)],
+        [InlineKeyboardButton("📄 ➡ 🖼️  PDF to Images", callback_data=MENU_PDF_TO_IMG)],
         [InlineKeyboardButton("❓  Help", callback_data=MENU_HELP)],
     ]
     return InlineKeyboardMarkup(keyboard)

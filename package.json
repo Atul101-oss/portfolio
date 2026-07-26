@@ -1,1 +1,11 @@
-{}
+{
+  "name": "portfolio-monorepo",
+  "private": true,
+  "scripts": {
+    "build:portfolio": "npm --prefix portfolio/react_app run build",
+    "build:dashboard": "npm --prefix dashboard/react_app run build",
+    "build:telegram": "npm --prefix telegramBots/react_app run build",
+    "build:digitalsignature": "npm --prefix DigitalSignature/react_app run build",
+    "build": "npm --prefix portfolio/react_app run build && npm --prefix dashboard/react_app run build && npm --prefix telegramBots/react_app run build && npm --prefix DigitalSignature/react_app run build"
+  }
+}
