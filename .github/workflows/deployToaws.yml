@@ -1,0 +1,49 @@
+name: Deploy Django to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-react-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: build-react-project
+        uses: actions/checkout@v4
+      - run: |
+          cd react-page-generator
+          npm install
+          npm run build
+          
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: build-python-env
+        uses: actions/setup-python@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/portfolio
+            git pull origin master
+
+            python -m venv .venv
+            source .venv/bin/activate
+
+            pip install -r requirements.txt
+
+            python manage.py migrate --noinput
+
+            python manage.py collectstatic --noinput
+
+            sudo systemctl restart gunicorn
